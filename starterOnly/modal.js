@@ -123,4 +123,5 @@ function validate() {
   }
 
   //Si tout les champs sont valides, le formulaire sera envoyé
+  alert("Merci ! Votre réservation a été reçue.");
 }
