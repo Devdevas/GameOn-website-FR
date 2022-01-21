@@ -30,7 +30,7 @@ function closeModal() {
 // Afficher le message d'erreur
 let errorMessage = "";
 function error(dataInput) {
-  dataInput.dataset.errorVisible = "true";
+  dataInput.dataset.errorVisible = true;
   dataInput.dataset.error = errorMessage;
 }
 // Pas de message d'erreur
@@ -63,12 +63,12 @@ prenom.addEventListener("input", prenomValidate);
 function prenomValidate() {
   if (!stringRegExp.test(prenom.value)) {
     errorMessage =
-      "Veuillez entrer 2 caractères ou plus et le champ ne peut contenir de nombres.";
+      "Veuillez entrer 2 caractères ou plus (ne peut contenir de nombres).";
     error(dataPrenom);
-    formValidity.prenomValue = "false";
+    formValidity.prenomValue = false;
   } else {
     noError(dataPrenom);
-    formValidity.prenomValue = "true";
+    formValidity.prenomValue = true;
   }
 }
 
@@ -77,12 +77,12 @@ nom.addEventListener("input", nomValidate);
 function nomValidate() {
   if (!stringRegExp.test(nom.value)) {
     errorMessage =
-      "Veuillez entrer 2 caractères ou plus, le champ ne peut pas contenir de nombres.";
+      "Veuillez entrer 2 caractères ou plus (ne peut contenir de nombres).";
     error(dataNom);
-    formValidity.nomValue = "false";
+    formValidity.nomValue = false;
   } else {
     noError(dataNom);
-    formValidity.nomValue = "true";
+    formValidity.nomValue = true;
   }
 }
 
@@ -96,10 +96,10 @@ function emailValidate() {
   if (!emailRegExp.test(email.value)) {
     errorMessage = "Veuillez entrer un email valide.";
     error(dataEmail);
-    formValidity.emailValue = "false";
+    formValidity.emailValue = false;
   } else {
     noError(dataEmail);
-    formValidity.emailValue = "true";
+    formValidity.emailValue = true;
   }
 }
 
@@ -129,14 +129,14 @@ function birthValidate() {
   if (!birthdate.value) {
     errorMessage = "Vous devez entrer votre date de naissance.";
     error(dataBirthdate);
-    formValidity.birthdateValue = "false";
+    formValidity.birthdateValue = false;
   } else if (age < 18) {
     errorMessage = "Vous devez avoir (18 ans) ou plus.";
     error(dataBirthdate);
-    formValidity.birthdateValue = "false";
+    formValidity.birthdateValue = false;
   } else {
     noError(dataBirthdate);
-    formValidity.birthdateValue = "true";
+    formValidity.birthdateValue = true;
   }
 }
 
@@ -146,10 +146,10 @@ function quantityValidate() {
   if (isNaN(quantity.value) || quantity.value == "") {
     errorMessage = "Une valeur numérique doit être saisie.";
     error(dataQuantity);
-    formValidity.quantityValue = "false";
+    formValidity.quantityValue = false;
   } else {
     noError(dataQuantity);
-    formValidity.quantityValue = "true";
+    formValidity.quantityValue = true;
   }
 }
 
@@ -162,10 +162,10 @@ function locationValidate() {
     if (!oneLocation.checked) {
       errorMessage = "Vous devez choisir une option.";
       error(dataLocation);
-      formValidity.locationValue = "false";
+      formValidity.locationValue = false;
     } else {
     noError(dataLocation);
-    formValidity.locationValue = "true";
+    formValidity.locationValue = true;
       break;
     }
   }
@@ -178,22 +178,22 @@ function conditionValidate() {
     errorMessage =
       "Vous devez vérifier que vous acceptez les termes et conditions.";
     error(dataCondition);
-    formValidity.conditionValue = "false";
+    formValidity.conditionValue = false;
   } else {
     noError(dataCondition);
-    formValidity.conditionValue = "true";
+    formValidity.conditionValue = true;
   }
 }
 
-//Cette objet nous permet de vérifier si tout les elements du tableau sont "true"
+//Cette objet nous permet de vérifier si tout les elements du tableau sont true
 const formValidity = {
-  prenomValue: "false",
-  nomValue: "false",
-  emailValue: "false",
-  birthdateValue: "false",
-  quantityValue: "false",
-  locationValue: "false",
-  conditionValue: "false",
+  prenomValue: false,
+  nomValue: false,
+  emailValue: false,
+  birthdateValue: false,
+  quantityValue: false,
+  locationValue: false,
+  conditionValue: false,
 }
 
 //Fonction de validation du formulaire
@@ -210,7 +210,7 @@ function validate(e) {
   conditionValidate();
 
   //Si tout les champs sont valides, afficher le message de remerciment
-  if (Object.values(formValidity).every((element) => element === "true")) {
+  if (Object.values(formValidity).every((element) => element === true)) {
     form.style.display = "none";
     document.querySelector(".modal-body").innerHTML =
       '<div><div class="success-message">Merci pour<br/>votre inscription</div><input class="btn-submit" type="submit" class="button" value="Fermer"/></div>';
