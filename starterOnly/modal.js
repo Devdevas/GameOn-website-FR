@@ -27,25 +27,6 @@ function closeModal() {
   modalbg.style.display = "none";
 }
 
-// Afficher le message d'erreur
-let errorMessage = "";
-function error(dataInput) {
-  dataInput.dataset.errorVisible = true;
-  dataInput.dataset.error = errorMessage;
-}
-// Pas de message d'erreur
-function noError(dataInput) {
-  dataInput.dataset.errorVisible = "";
-}
-
-// Dom Elements(dataform)
-const dataPrenom = document.querySelector(".dataPrenom");
-const dataNom = document.querySelector(".dataNom");
-const dataEmail = document.querySelector(".dataEmail");
-const dataBirthdate = document.querySelector(".dataBirthdate");
-const dataQuantity = document.querySelector(".dataQuantity");
-const dataLocation = document.querySelector(".dataLocation");
-const dataCondition = document.querySelector(".dataCondition");
 // DOM Elements(inputs)
 const prenom = document.getElementById("first");
 const nom = document.getElementById("last");
@@ -53,65 +34,77 @@ const email = document.getElementById("email");
 const birthdate = document.getElementById("birthdate");
 const quantity = document.getElementById("quantity");
 const locations = document.querySelectorAll('input[name="location"]');
+const location1 = document.getElementById("location1");
 const conditionCase = document.getElementById("checkbox1");
+
+// Afficher le message d'erreur
+function error(input, message) {
+  input.parentElement.dataset.errorVisible = true;
+  input.parentElement.dataset.error = message;
+}
+// Pas de message d'erreur
+function noError(input) {
+  input.parentElement.dataset.errorVisible = false;
+}
+
+//Cet objet nous permet de vérifier si tout les elements du tableau sont "true"
+const formValidity = {
+  first: false,
+  last: false,
+  email: false,
+  birthdate: false,
+  quantity: false,
+  location: false,
+  cgu: false,
+}
 
 //RegExp pour l'interdiction des nombres dans les champs (prénom et nom)
 let stringRegExp = new RegExp("^[a-zA-Z]{2,}$");
+//Creation de la RegExp pour la validation de l'email
+let emailRegExp = new RegExp(
+  "^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$"
+);
+
+//la fonction de validation des inputs
+function inputValidity(input, condition, message) {
+  const name = input.getAttribute("name");
+  if (condition) {
+    error(input, message);
+    formValidity[name] = false;
+  } else {
+    noError(input);
+    formValidity[name] = true;
+  }
+}
 
 //Validation du prénom
 prenom.addEventListener("input", prenomValidate);
 function prenomValidate() {
-  if (!stringRegExp.test(prenom.value)) {
-    errorMessage =
-      "Veuillez entrer 2 caractères ou plus (ne peut contenir de nombres).";
-    error(dataPrenom);
-    formValidity.prenomValue = false;
-  } else {
-    noError(dataPrenom);
-    formValidity.prenomValue = true;
-  }
+  inputValidity(
+    prenom,
+    !stringRegExp.test(prenom.value),
+    "Veuillez entrer 2 caractères ou plus (ne peut contenir de nombres)."
+  );
 }
 
 //Validation du nom
 nom.addEventListener("input", nomValidate);
 function nomValidate() {
-  if (!stringRegExp.test(nom.value)) {
-    errorMessage =
-      "Veuillez entrer 2 caractères ou plus (ne peut contenir de nombres).";
-    error(dataNom);
-    formValidity.nomValue = false;
-  } else {
-    noError(dataNom);
-    formValidity.nomValue = true;
-  }
+  inputValidity(
+    nom,
+    !stringRegExp.test(nom.value),
+    "Veuillez entrer 2 caractères ou plus (ne peut contenir de nombres)."
+  );
 }
 
-//Creation de la RegExp pour la validation de l'email
-let emailRegExp = new RegExp(
-  "^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$"
-);
 //Validation de l'email
 email.addEventListener("input", emailValidate);
 function emailValidate() {
-  if (!emailRegExp.test(email.value)) {
-    errorMessage = "Veuillez entrer un email valide.";
-    error(dataEmail);
-    formValidity.emailValue = false;
-  } else {
-    noError(dataEmail);
-    formValidity.emailValue = true;
-  }
-}
-
-//Calculer l'age en comparant la date de naissance à la date d'aujourd'hui
-const todayDate = new Date();
-const birthdateValue = new Date(birthdate.value);
-todayDate.setHours(0, 0, 0, 0);
-const age = todayDate.getFullYear() - birthdateValue.getFullYear();
-const month = todayDate.getMonth() - birthdateValue.getMonth();
-const day = todayDate.getDate() - birthdateValue.getDate();
-if (month < 0 || (month == 0 && day < 0)) {
-  age--;
+  inputValidity(
+    email,
+    !emailRegExp.test(email.value),
+    "Veuillez entrer un email valide."
+  );
 }
 
 //Validation de la date de naissance (le champ ne peut être vide et il faut être majeur)
@@ -126,46 +119,35 @@ function birthValidate() {
   if (month < 0 || (month == 0 && day < 0)) {
     age--;
   }
-  if (!birthdate.value) {
-    errorMessage = "Vous devez entrer votre date de naissance.";
-    error(dataBirthdate);
-    formValidity.birthdateValue = false;
-  } else if (age < 18) {
-    errorMessage = "Vous devez avoir (18 ans) ou plus.";
-    error(dataBirthdate);
-    formValidity.birthdateValue = false;
-  } else {
-    noError(dataBirthdate);
-    formValidity.birthdateValue = true;
-  }
+  inputValidity(
+    birthdate,
+    !birthdate.value || age < 18,
+    "Le champ ne peut être vide (il faut avoir 18 ou plus)."
+  );
 }
 
 //La quantité doit être une valeur numérique et le champ ne peut être vide
 quantity.addEventListener("input", quantityValidate);
 function quantityValidate() {
-  if (isNaN(quantity.value) || quantity.value == "") {
-    errorMessage = "Une valeur numérique doit être saisie.";
-    error(dataQuantity);
-    formValidity.quantityValue = false;
-  } else {
-    noError(dataQuantity);
-    formValidity.quantityValue = true;
-  }
+  inputValidity(
+    quantity,
+    isNaN(quantity.value) || quantity.value == "",
+    "Une valeur numérique doit être saisie."
+  );
 }
 
 //Un bouton radio doit être sélectionné
-for(let i = 0; i < locations.length; i++){
+for (let i = 0; i < locations.length; i++) {
   locations[i].addEventListener("input", locationValidate);
 }
 function locationValidate() {
   for (const oneLocation of locations) {
     if (!oneLocation.checked) {
-      errorMessage = "Vous devez choisir une option.";
-      error(dataLocation);
-      formValidity.locationValue = false;
+      error(location1, "Vous devez choisir une option.");
+      formValidity.location = false;
     } else {
-    noError(dataLocation);
-    formValidity.locationValue = true;
+      noError(location1);
+      formValidity.location = true;
       break;
     }
   }
@@ -174,26 +156,11 @@ function locationValidate() {
 //La case des conditions générales doit être cochée
 conditionCase.addEventListener("input", conditionValidate);
 function conditionValidate() {
-  if (!conditionCase.checked) {
-    errorMessage =
-      "Vous devez vérifier que vous acceptez les termes et conditions.";
-    error(dataCondition);
-    formValidity.conditionValue = false;
-  } else {
-    noError(dataCondition);
-    formValidity.conditionValue = true;
-  }
-}
-
-//Cette objet nous permet de vérifier si tout les elements du tableau sont true
-const formValidity = {
-  prenomValue: false,
-  nomValue: false,
-  emailValue: false,
-  birthdateValue: false,
-  quantityValue: false,
-  locationValue: false,
-  conditionValue: false,
+  inputValidity(
+    conditionCase,
+    !conditionCase.checked,
+    "Vous devez vérifier que vous acceptez les termes et conditions."
+  );
 }
 
 //Fonction de validation du formulaire

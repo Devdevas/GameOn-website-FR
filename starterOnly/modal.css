@@ -190,20 +190,16 @@ input {
 .formData[data-error-visible="true"]::after {
   opacity: 1;
 }
+.formData[data-error-visible="false"]::after {
+  display: none;
+}
 .formData[data-error-visible="true"] .text-control {
   border: 2px solid #e54858;
 }
-
 .success-message {
   font-size: 1.4em;
   text-align: center;
   margin: 275px 0;
-}
-
-input[data-error]::after {
-  content: attr(data-error);
-  font-size: 0.4em;
-  color: red;
 }
 .checkbox-label,
 .checkbox2-label {
@@ -457,14 +453,41 @@ footer {
 
 /*Media queries*/
 @media screen and (max-width: 992px) {
+  .main-navbar {
+    margin-top: 55px;
+  }
+  .topnav{
+    justify-content: space-between;
+    margin: 20px 25px 5px 20px;
+    padding-left: 2%;
+    align-items: flex-start;
+  }
+  .topnav a.icon {
+    margin: 0;
+    font-size: 1.6em;
+    display: block;
+  }
+  .topnav a {
+    display: none;
+  }
+  .topnav.responsive {
+    position: relative;
+  }
+  .topnav.responsive .icon {
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+  .topnav.responsive a {
+    float: none;
+    display: block;
+    text-align: left;
+  }
   .header-logo img{
     width: 225px;
   }
   .header-logo{
     padding-right: 0;
-  }
-  .main-navbar a {
-    font-size: 1em;
   }
   .hero-section {
     display: block;
@@ -508,53 +531,11 @@ footer {
 
 @media screen and (max-width: 768px) {
   .topnav a {
-    display: none;
-  }
-  .topnav a.icon {
-    float: right;
-    display: block;
-  }
-}
-
-@media screen and (max-width: 768px) {
-  .topnav.responsive {
-    position: relative;
-  }
-  .topnav.responsive .icon {
-    position: absolute;
-    right: 0;
-    top: 0;
-  }
-  .topnav.responsive a {
-    float: none;
-    display: block;
-    text-align: left;
-  }
-}
-
-@media screen and (max-width: 768px) {
-  .main-navbar {
-    margin-top: 55px;
-  }
-  .topnav{
-    justify-content: space-between;
-  }
-  .topnav a {
-    display: none;
-    border-radius: 5px;
     font-size: 0.9em;
   }
   .topnav a.icon {
-    float: right;
-    display: block;
-    margin: 0;
-    font-size: 1.4em;
-    border-radius: 5px;
-  }
-  .topnav {
-    margin: 20px 25px 5px 20px;
-    padding-left: 2%;
-    align-items: flex-start;
+    margin-top: 2px;
+    font-size: 1.5em;
   }
   .header-logo img{
     width: 180px;
@@ -568,10 +549,6 @@ footer {
     font-size: 0.9em;
     margin-top: 25px;
   }
-  .topnav a:hover,
-  .topnav a.active {
-    border-radius: 5px;
-  }
   p.copyrights {
     margin: 10px;
     font-size: 0.6em;
@@ -582,6 +559,10 @@ footer {
 }
 
 @media screen and (max-width: 540px) {
+  .topnav a.icon {
+    margin-top: 0;
+    font-size: 1.4em;
+  }
   .header-logo img{
     width: 130px;
   }
@@ -592,7 +573,12 @@ footer {
     font-size: 0.6em;
     margin-top: 25px;
   }
+  .hero-section .btn-signup {
+    font-size: 1.1rem;
+  }
 }
+
+/*Modal animation*/
 @keyframes modalopen {
   from {
     opacity: 0;
